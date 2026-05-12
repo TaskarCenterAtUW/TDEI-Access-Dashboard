@@ -2,6 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 import json
+import geopandas as gpd
 
 # Load environment variables
 load_dotenv()
@@ -24,21 +25,44 @@ params = {
 
 # Make request
 response = requests.get(URL, headers=headers, params=params)
-data = response.json()
 
-# Normalize response into a list of items
-if isinstance(data, dict):
-    items = data.get("items", [data])
-elif isinstance(data, list):
-    items = data
-else:
-    raise ValueError("Unexpected API response format")
+data = json.loads(response.text)
 
-# Pretty-print JSON and save to file
-with open(output_path, "w") as f:
-    json.dump(items, f, indent=2)
+table_data = {
+    "jurisdiction_id": [],
+    "jurisdiction_name": [],
+    "state": [],
+    "jurisdiction_type": [],
+    "population": [],
+    "area_sq_km": [],
+    "dataset_version": []
+}
 
-print(f"Saved pretty JSON to: {output_path}")
+geometry = [Polygon(data[0]["metadata"]["dataset_detail"]["dataset_area"]["features"][0]["geometry"]["coordinates"])]
+
+
+# gdf = gpd.GeoDataFrame.from_features(data["features"])
+ 
+# geometry_wkb = [Polygon( response.)
+
+
+
+
+
+
+# # Normalize response into a list of items
+# if isinstance(data, dict):
+#     items = data.get("items", [data])
+# elif isinstance(data, list):
+#     items = data
+# else:
+#     raise ValueError("Unexpected API response format")
+
+# # Pretty-print JSON and save to file
+# with open(output_path, "w") as f:
+#     json.dump(items, f, indent=2)
+
+# print(f"Saved pretty JSON to: {output_path}")
 
 
 
